@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+
+.form-input{
+    margin-top: 10px;
+    display: flex;
+    label{
+        min-width: 100px
+    }
+    
+    small{
+        color: rgba(255, 0, 0, 0.7);
+        font-size: 14px;
+    }
+
+    .input-validator{
+        display: flex;
+        flex-direction: column;
+        max-width: 200px;
+
+        input[type=text]{
+            font-family: inherit;
+            height: 30px;
+            border: none;
+            border-bottom: 1px solid gray;
+            width: min(100% - 5px, 200px);
+        }
+    }
+
+}
+
+.buttons-margin-top{
+    margin-top: 20px;
+}
+
+
+.buttons-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}

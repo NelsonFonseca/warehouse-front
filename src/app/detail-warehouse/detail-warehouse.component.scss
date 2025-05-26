@@ -1,0 +1,20 @@
+
+.container-detail{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.button-right{
+    display: flex;
+    justify-content: end;
+}
+
+:host ::ng-deep .p-dropdown {
+    border:none;
+    border-bottom: 1px solid gray;
+    width: 170px;
+}
+
+.buttons-container{
+    margin-top: 150px;
+}

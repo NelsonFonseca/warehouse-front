@@ -1,0 +1,11 @@
+
+:host ::ng-deep .p-dropdown {
+    border:none;
+    border-bottom: 1px solid gray;
+    width: 170px;
+}
+
+.container-actions{
+    display: flex;
+    gap: 10px;
+}

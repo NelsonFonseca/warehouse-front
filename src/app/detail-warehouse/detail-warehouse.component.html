@@ -1,0 +1,101 @@
+
+<div class="container-detail">
+  <div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-input">
+        <label>Almacén</label>
+        <div class="input-validator">
+          <input type="text" formControlName="uuid"/>
+        </div>
+      </div>
+    
+      <div class="form-input">
+        <label>Cliente</label>
+        <div class="input-validator">
+          <input type="text" formControlName="client" />
+          <div *ngIf="form.get('client')?.touched && form.get('client')?.invalid">
+            <small>El campo es obligatorio y debe tener al menos 3 caracteres.</small>
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-input">
+        <label>Tipo</label>
+        <div class="input-validator">
+          <p-dropdown [options]="families" formControlName="family" placeholder=" "></p-dropdown>
+          <div *ngIf="form.get('family')?.touched && form.get('family')?.invalid">
+            <small>El campo es obligatorio.</small>
+          </div>
+        </div>
+      </div>
+    
+      <div class="form-input">
+        <label>Tamaño</label>
+        <div class="input-validator">
+          <input type="text" formControlName="size" />
+          <div *ngIf="form.get('size')?.touched && form.get('size')?.invalid">
+            <small>El campo es obligatorio.</small>
+          </div>
+        </div>
+      </div>
+    
+      <div class="buttons-margin-top" *ngIf="option">
+        <p-button type="submit" label="Actualizar"></p-button>
+      </div>
+    </form>
+  </div>
+  <div>
+    <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+          <tr>
+              <th pSortableColumn="uuid" >Instalación <p-sortIcon field="uuid"></p-sortIcon></th>
+              <th pSortableColumn="type" >Tipo <p-sortIcon field="type"></p-sortIcon></th>
+              <th *ngIf="option">Acciones</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+          <tr>
+              <td>{{ product.uuid }}</td>
+              <td>{{ product.type }}</td>
+              <td *ngIf="option">
+                <p-button icon="pi pi-check"></p-button>
+              </td>
+          </tr>
+      </ng-template>
+    </p-table>
+    <div class="buttons-margin-top button-right" *ngIf="option">
+      <p-button (click)="visible = true" label="Añadir"></p-button>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog header="Añadir Instalación" [(visible)]="visible" [modal]="true" [style]="{ width: 'min(100% - 5px, 400px)' }" [draggable]="false" [resizable]="false">
+    
+  <form [formGroup]="formRack" (ngSubmit)="onSubmitRack()">
+    <div class="form-input">
+      <label>Instalación</label>
+      <div class="input-validator">
+        <input type="text" formControlName="uuid" />
+        <div *ngIf="formRack.get('uuid')?.touched && formRack.get('uuid')?.invalid">
+          <small>El campo es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-input">
+      <label>Tipo</label>
+      <div class="input-validator">
+        <p-dropdown [options]="rackType" formControlName="type" placeholder=" "></p-dropdown>
+        <div *ngIf="formRack.get('type')?.touched && formRack.get('type')?.invalid">
+          <small>El campo es obligatorio.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons-container">
+      <p-button label="Cancelar" (click)="cancel()"></p-button>
+      <p-button type="submit" label="Añadir"></p-button>
+    </div>
+  </form>
+</p-dialog>
