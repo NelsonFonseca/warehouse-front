@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ConsumeService } from 'src/services/consume.service';
 
 @Component({
   selector: 'app-table-warehouse',
@@ -9,19 +10,18 @@ import { Router } from '@angular/router';
 })
 export class TableWarehouseComponent implements OnInit {
 
-  constructor(private router: Router, private fb: FormBuilder) { }
+  constructor(private router: Router, private fb: FormBuilder, private service : ConsumeService) { }
 
-  products: any[] = [];
+  warehouses: any[] = [];
   families: any[] = [];
+  permitations: any[] = [];
   visible: boolean = false;
 
   formulario!: FormGroup;
+  formPermutation! : FormGroup;
 
   ngOnInit() {
-    this.products = [
-      {"id": "123", "uuid": "name1", "client": "client2", "family": "family1", "size": "size1"},
-      {"id": "321", "uuid": "name2", "client": "client2", "family": "family2", "size": "size2"}
-    ];
+    this.getWarehouses();
 
     this.families = ["EST", "ROB"];
 
@@ -33,6 +33,32 @@ export class TableWarehouseComponent implements OnInit {
       size: ['', Validators.required]
     });
 
+    this.formPermutation = this.fb.group({
+      size: ['', Validators.required],
+      family: ['', Validators.required],
+    });
+
+  }
+
+  getWarehouses(){
+    this.service.getList('/warehouses').subscribe(res => {
+      console.log(res);
+      this.warehouses = res as [];
+    });
+  }
+
+  createWarehouses(body: any){
+    this.service.create('/warehouses', body).subscribe(res => {
+      console.log(res);
+      this.getWarehouses();
+    });
+  }
+
+  deleteWarehouses(id: number){
+    this.service.delete('/warehouses', id).subscribe(res => {
+      console.log(res);
+      this.getWarehouses();
+    });
   }
 
   goDetail(id: string, option: string){
@@ -46,6 +72,7 @@ export class TableWarehouseComponent implements OnInit {
   onSubmit() {
     if (this.formulario.valid) {
       console.log('Formulario enviado:', this.formulario.value);
+      this.createWarehouses(this.formulario.value);
       this.cancel();
     } else {
       this.formulario.markAllAsTouched();
@@ -55,6 +82,19 @@ export class TableWarehouseComponent implements OnInit {
   cancel() {
     this.formulario.reset();
     this.visible = false;
+  }
+
+  calculatePermutation(){
+    if (this.formPermutation.valid) {
+      console.log('Formulario enviado:', this.formPermutation.value);
+      this.service.calculatePermutations('/permutations', this.formPermutation.value.family, this.formPermutation.value.size).subscribe(res => {
+        console.log(res);
+        this.permitations = res as [];
+        this.formPermutation.reset();
+      });
+    } else {
+      this.formPermutation.markAllAsTouched();
+    }
   }
     
 

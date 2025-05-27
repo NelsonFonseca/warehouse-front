@@ -22,7 +22,7 @@
       <div class="form-input">
         <label>Tipo</label>
         <div class="input-validator">
-          <p-dropdown [options]="families" formControlName="family" placeholder=" "></p-dropdown>
+          <p-dropdown [options]="families" formControlName="family" placeholder=" " (onChange)="changeData($event)"></p-dropdown>
           <div *ngIf="form.get('family')?.touched && form.get('family')?.invalid">
             <small>El campo es obligatorio.</small>
           </div>
@@ -45,7 +45,7 @@
     </form>
   </div>
   <div>
-    <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="rasks" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
           <tr>
               <th pSortableColumn="uuid" >Instalación <p-sortIcon field="uuid"></p-sortIcon></th>
@@ -53,12 +53,12 @@
               <th *ngIf="option">Acciones</th>
           </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product>
+      <ng-template pTemplate="body" let-rask>
           <tr>
-              <td>{{ product.uuid }}</td>
-              <td>{{ product.type }}</td>
+              <td>{{ rask.uuid }}</td>
+              <td>{{ rask.type }}</td>
               <td *ngIf="option">
-                <p-button icon="pi pi-check"></p-button>
+                <p-button icon="pi pi-trash" (click)="deleteRacks(rask.id)"></p-button>
               </td>
           </tr>
       </ng-template>

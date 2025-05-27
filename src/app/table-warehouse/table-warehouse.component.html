@@ -1,5 +1,5 @@
 <div class="card">
-  <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+  <p-table [value]="warehouses" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
           <tr>
               <th pSortableColumn="client" >Cliente <p-sortIcon field="client"></p-sortIcon></th>
@@ -9,16 +9,16 @@
               <th>Acciones</th>
           </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product>
+      <ng-template pTemplate="body" let-warehouse>
           <tr>
-              <td>{{ product.client }}</td>
-              <td>{{ product.uuid }}</td>
-              <td>{{ product.family }}</td>
-              <td>{{ product.size }}</td>
+              <td>{{ warehouse.client }}</td>
+              <td>{{ warehouse.uuid }}</td>
+              <td>{{ warehouse.family }}</td>
+              <td>{{ warehouse.size }}</td>
               <td class="container-actions">
-                <p-button icon="pi pi-eye" (click)="goDetail(product.id, 'view')" title="Ver detalle"></p-button>
-                <p-button icon="pi pi-pencil" (click)="goDetail(product.id, 'edit')" title="Editar"></p-button>
-                <p-button icon="pi pi-trash" title="Eliminar"></p-button>
+                <p-button icon="pi pi-eye" (click)="goDetail(warehouse.id, 'view')" title="Ver detalle"></p-button>
+                <p-button icon="pi pi-pencil" (click)="goDetail(warehouse.id, 'edit')" title="Editar"></p-button>
+                <p-button icon="pi pi-trash" (click)="deleteWarehouses(warehouse.id)" title="Eliminar"></p-button>
               </td>
           </tr>
       </ng-template>
@@ -79,3 +79,35 @@
     </div>
   </form>
 </p-dialog>
+
+
+<hr>
+
+<h2>Cálculo de permutaciones</h2>
+
+<form [formGroup]="formPermutation" (ngSubmit)="calculatePermutation()">
+  <div class="form-input">
+    <label>Tamaño</label>
+    <div class="input-validator">
+      <input type="text" formControlName="size" />
+      <div *ngIf="formPermutation.get('size')?.touched && formPermutation.get('size')?.invalid">
+        <small>El campo es obligatorio.</small>
+      </div>
+    </div>
+  </div>
+  <div class="form-input">
+    <label>Tipo</label>
+    <div class="input-validator">
+      <p-dropdown [options]="families" formControlName="family" placeholder=" "></p-dropdown>
+      <div *ngIf="formPermutation.get('family')?.touched && formPermutation.get('family')?.invalid">
+        <small>El campo es obligatorio.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons-margin-top">
+    <p-button type="submit" label="Calcular"></p-button>
+  </div>
+</form>
+
+{{permitations | json}}

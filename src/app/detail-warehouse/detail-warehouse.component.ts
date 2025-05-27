@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ConsumeService } from 'src/services/consume.service';
 
 @Component({
   selector: 'app-detail-warehouse',
@@ -12,7 +13,7 @@ export class DetailWarehouseComponent implements OnInit {
   dataId: string = '';
   option: boolean = false;
 
-  constructor(private router: Router, private fb: FormBuilder) { 
+  constructor(private router: Router, private fb: FormBuilder, private service : ConsumeService) { 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
     this.dataId = state?.['id'];
@@ -22,7 +23,7 @@ export class DetailWarehouseComponent implements OnInit {
     }
   }
 
-  products: any[] = [];
+  rasks: any[] = [];
   families: any[] = [];
   rackType: any[] = [];
   visible: boolean = false;
@@ -30,16 +31,14 @@ export class DetailWarehouseComponent implements OnInit {
   formRack!: FormGroup;
 
   ngOnInit() {
-    this.products = [
-      {"id": "123", "uuid": "name1", "type": "client2", "family": "family1", "size": "size1"},
-      {"id": "321", "uuid": "name2", "type": "client2", "family": "family2", "size": "size2"}
-    ];
+    this.getWarehouseData();
+    this.getRacks();
 
     this.families = ["EST", "ROB"];
-    this.rackType = ["A", "B", "C", "D"];
+    this.rackType = ["A", "B", "C"];
       
     this.form = this.fb.group({
-      uuid: [{value: '', disabled: true}, Validators.required],
+      uuid: [{value: '', disabled: true}],
       client: [{value: '', disabled: !this.option}, [Validators.required, Validators.minLength(3)]],
       family: [{value: '', disabled: !this.option}, Validators.required],
       size: [{value: '', disabled: !this.option}, Validators.required]
@@ -48,13 +47,57 @@ export class DetailWarehouseComponent implements OnInit {
     this.formRack = this.fb.group({
       uuid: ['', Validators.required],
       type: ['', [Validators.required]],
+      warehouse: [this.dataId, [Validators.required]],
     });
 
   }
 
+  getWarehouseData(){
+    this.service.getOne('/warehouses', this.dataId as any).subscribe((res : any) => {
+      console.log(res);
+      if(res.family == 'ROB'){
+        this.rackType = ["A", "C", "D"];
+      }
+      this.form = this.fb.group({
+        uuid: [{value: res.uuid, disabled: true}],
+        client: [{value: res.client, disabled: !this.option}, [Validators.required, Validators.minLength(3)]],
+        family: [{value: res.family, disabled: !this.option}, Validators.required],
+        size: [{value: res.size, disabled: !this.option}, Validators.required]
+      });
+    });
+  }
+
+  updateWarehouseData(body : any){
+    this.service.update('/warehouses', body, this.dataId as any).subscribe((res : any) => {
+      console.log(res);
+    });
+  }
+
+  getRacks(){
+    this.service.getList('/racks/warehouse/'+this.dataId).subscribe((res : any) => {
+      console.log(res);
+      this.rasks = res as [];
+    });
+  }
+
+  createRacks(body : any){
+    this.service.create('/racks', body).subscribe((res : any) => {
+      console.log(res);
+      this.getRacks();
+    });
+  }
+
+  deleteRacks(id: number){
+    this.service.delete('/racks', id).subscribe((res : any) => {
+      console.log(res);
+      this.getRacks();
+    });
+  }
+
   onSubmit() {
     if (this.form.valid) {
-      console.log('Formulario enviado:', this.form.value);
+      console.log('Formulario enviado:', this.form.getRawValue());
+      this.updateWarehouseData(this.form.getRawValue());
       this.visible = false;
     } else {
       this.form.markAllAsTouched();
@@ -65,6 +108,7 @@ export class DetailWarehouseComponent implements OnInit {
   onSubmitRack() {
     if (this.formRack.valid) {
       console.log('Formulario enviado:', this.formRack.value);
+      this.createRacks(this.formRack.value);
       this.cancel();
     } else {
       this.formRack.markAllAsTouched();
@@ -74,5 +118,13 @@ export class DetailWarehouseComponent implements OnInit {
   cancel() {
     this.formRack.reset();
     this.visible = false;
+  }
+
+  changeData(event : any){
+    if(event.value == 'ROB'){
+      this.rackType = ["A", "C", "D"];
+    }else{
+      this.rackType = ["A", "B", "C"];
+    }
   }
 }

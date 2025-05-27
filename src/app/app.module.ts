@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
+import { ConsumeService } from '../services/consume.service';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     DropdownModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [ConsumeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
