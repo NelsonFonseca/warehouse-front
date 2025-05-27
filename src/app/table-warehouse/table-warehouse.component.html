@@ -81,33 +81,36 @@
 </p-dialog>
 
 
-<hr>
+<div class="permutation-content">
+  <hr>
 
-<h2>Cálculo de permutaciones</h2>
+  <h2>Cálculo de permutaciones</h2>
 
-<form [formGroup]="formPermutation" (ngSubmit)="calculatePermutation()">
-  <div class="form-input">
-    <label>Tamaño</label>
-    <div class="input-validator">
-      <input type="text" formControlName="size" />
-      <div *ngIf="formPermutation.get('size')?.touched && formPermutation.get('size')?.invalid">
-        <small>El campo es obligatorio.</small>
+  <form [formGroup]="formPermutation" (ngSubmit)="calculatePermutation()">
+    <div class="form-input">
+      <label>Tamaño</label>
+      <div class="input-validator">
+        <input type="text" formControlName="size" />
+        <div *ngIf="formPermutation.get('size')?.touched && formPermutation.get('size')?.invalid">
+          <small>El campo es obligatorio.</small>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-input">
-    <label>Tipo</label>
-    <div class="input-validator">
-      <p-dropdown [options]="families" formControlName="family" placeholder=" "></p-dropdown>
-      <div *ngIf="formPermutation.get('family')?.touched && formPermutation.get('family')?.invalid">
-        <small>El campo es obligatorio.</small>
+    <div class="form-input">
+      <label>Tipo</label>
+      <div class="input-validator">
+        <p-dropdown [options]="families" formControlName="family" placeholder=" "></p-dropdown>
+        <div *ngIf="formPermutation.get('family')?.touched && formPermutation.get('family')?.invalid">
+          <small>El campo es obligatorio.</small>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="buttons-margin-top">
-    <p-button type="submit" label="Calcular"></p-button>
-  </div>
-</form>
+    <div class="buttons-margin-top">
+      <p-button type="submit" label="Calcular"></p-button>
+    </div>
+  </form>
 
-{{permitations | json}}
+  {{permitations | json}}
+
+</div>

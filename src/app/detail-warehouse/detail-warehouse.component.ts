@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConsumeService } from 'src/services/consume.service';
+import { ConsumeService } from '../../services/consume.service';
 
 @Component({
   selector: 'app-detail-warehouse',
@@ -17,7 +17,6 @@ export class DetailWarehouseComponent implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
     this.dataId = state?.['id'];
-    console.log(state?.['id'], state?.['option']);
     if(state?.['option'] == 'edit'){
       this.option = true;
     }
@@ -54,7 +53,6 @@ export class DetailWarehouseComponent implements OnInit {
 
   getWarehouseData(){
     this.service.getOne('/warehouses', this.dataId as any).subscribe((res : any) => {
-      console.log(res);
       if(res.family == 'ROB'){
         this.rackType = ["A", "C", "D"];
       }
@@ -75,28 +73,24 @@ export class DetailWarehouseComponent implements OnInit {
 
   getRacks(){
     this.service.getList('/racks/warehouse/'+this.dataId).subscribe((res : any) => {
-      console.log(res);
       this.rasks = res as [];
     });
   }
 
   createRacks(body : any){
     this.service.create('/racks', body).subscribe((res : any) => {
-      console.log(res);
       this.getRacks();
     });
   }
 
   deleteRacks(id: number){
     this.service.delete('/racks', id).subscribe((res : any) => {
-      console.log(res);
       this.getRacks();
     });
   }
 
   onSubmit() {
     if (this.form.valid) {
-      console.log('Formulario enviado:', this.form.getRawValue());
       this.updateWarehouseData(this.form.getRawValue());
       this.visible = false;
     } else {
@@ -107,7 +101,6 @@ export class DetailWarehouseComponent implements OnInit {
 
   onSubmitRack() {
     if (this.formRack.valid) {
-      console.log('Formulario enviado:', this.formRack.value);
       this.createRacks(this.formRack.value);
       this.cancel();
     } else {

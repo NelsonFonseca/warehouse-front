@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConsumeService } from 'src/services/consume.service';
+import { ConsumeService } from '../../services/consume.service';
 
 @Component({
   selector: 'app-table-warehouse',
@@ -42,21 +42,18 @@ export class TableWarehouseComponent implements OnInit {
 
   getWarehouses(){
     this.service.getList('/warehouses').subscribe(res => {
-      console.log(res);
       this.warehouses = res as [];
     });
   }
 
   createWarehouses(body: any){
     this.service.create('/warehouses', body).subscribe(res => {
-      console.log(res);
       this.getWarehouses();
     });
   }
 
   deleteWarehouses(id: number){
     this.service.delete('/warehouses', id).subscribe(res => {
-      console.log(res);
       this.getWarehouses();
     });
   }
@@ -71,7 +68,6 @@ export class TableWarehouseComponent implements OnInit {
   
   onSubmit() {
     if (this.formulario.valid) {
-      console.log('Formulario enviado:', this.formulario.value);
       this.createWarehouses(this.formulario.value);
       this.cancel();
     } else {
@@ -86,9 +82,7 @@ export class TableWarehouseComponent implements OnInit {
 
   calculatePermutation(){
     if (this.formPermutation.valid) {
-      console.log('Formulario enviado:', this.formPermutation.value);
       this.service.calculatePermutations('/permutations', this.formPermutation.value.family, this.formPermutation.value.size).subscribe(res => {
-        console.log(res);
         this.permitations = res as [];
         this.formPermutation.reset();
       });
